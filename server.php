@@ -72,6 +72,20 @@ case 'POST':
     break;
 
 case 'PUT':
+    //Validamos que el recurso buscado exista
+
+    if (!empty($resourceId) && array_key_exists($resourceId, $books)) {
+
+        //Tomamos la entrada "cruda"
+        $json = file_get_contents('php://input');
+
+        //Transformamos el json recibido a un nuevo elemento de array
+        $books[ $resourceId ] = json_decode($json, true);
+
+        //Retornamos la collecion completa en formato json
+        echo json_encode($books);
+    }
+    
     break;
 
 case 'DELETE':
