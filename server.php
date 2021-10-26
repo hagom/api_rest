@@ -59,6 +59,16 @@ case 'GET':
     break;
 
 case 'POST':
+
+    //Tomamos la entrada "cruda"
+    $json = file_get_contents('php://input');
+
+    //Transformamos el json recibido a un nuevo elemento de array
+    $books[] = json_decode($json, true);
+
+    //Emitimos hacia la salida la ultima clave del arreglo 
+    echo array_keys($books) [count($books) - 1];
+    // echo json_encode($books);
     break;
 
 case 'PUT':
