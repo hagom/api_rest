@@ -1,24 +1,6 @@
 <?php
 
-if (
-    !array_key_exists('HTTP_X_HASH', $_SERVER)
-    || !array_key_exists('HTTP_X_TIMESTAMP', $_SERVER)
-    || !array_key_exists('HTTP_X_UID', $_SERVER)
-)
-{
-    die;
-}
-
-list($hash, $uid, $timestamp) = [
-    $_SERVER['HTTP_X_HASH'],
-    $_SERVER['HTTP_X_UID'],
-    $_SERVER['HTTP_X_TIMESTAMP'],
-];
-
-$secret = 'Sh no se lo cuentes a nadie';
-$newHash = sha1($uid,$timestamp,$secret);
-
-if ($newHash !== $hash) {
+if (!array_key_exists('HTTP_X_TOKEN', $_SERVER)) {
     die;
 }
 
@@ -35,6 +17,29 @@ $allowedResourcesTypes = [
 $resourceType = $_GET['resource_type'];
 
 if (!in_array($resourceType, $allowedResourcesTypes)) {
+    die;
+}
+
+$url = 'http://localhost:8001';
+$ch = curl_init($url);
+curl_setopt(
+    $ch,
+    CURLOPT_HTTPHEADER,
+    [
+        "X-TOKEN: {$_SERVER['HTTP_X_TOKEN']}"
+    ]
+
+);
+
+curl_setopt(
+    $ch,
+    CURLOPT_RETURNTRANSFER,
+    true,
+);
+
+$ret = curl_exec($ch);
+
+if ($ret !== 'true') {
     die;
 }
 
