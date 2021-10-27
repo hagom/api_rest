@@ -1,5 +1,13 @@
 <?php
 
+$user = array_key_exists('PHP_AUTH_USER', $_SERVER) ? $_SERVER['PHP_AUTH_USER'] : '';
+
+$pwd = array_key_exists('PHP_AUTH_PW', $_SERVER) ? $_SERVER['PHP_AUTH_PW'] : '';
+
+if ($user !== 'hector' || $pwd !== '1234') {
+    die;    
+}
+
 // Aqui definimos los recursos disponibles
 
 $allowedResourcesTypes = [
