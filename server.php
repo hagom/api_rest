@@ -1,11 +1,25 @@
 <?php
 
-$user = array_key_exists('PHP_AUTH_USER', $_SERVER) ? $_SERVER['PHP_AUTH_USER'] : '';
+if (
+    !array_key_exists('HTTP_X_HASH', $_SERVER)
+    || !array_key_exists('HTTP_X_TIMESTAMP', $_SERVER)
+    || !array_key_exists('HTTP_X_UID', $_SERVER)
+)
+{
+    die;
+}
 
-$pwd = array_key_exists('PHP_AUTH_PW', $_SERVER) ? $_SERVER['PHP_AUTH_PW'] : '';
+list($hash, $uid, $timestamp) = [
+    $_SERVER['HTTP_X_HASH'],
+    $_SERVER['HTTP_X_UID'],
+    $_SERVER['HTTP_X_TIMESTAMP'],
+];
 
-if ($user !== 'hector' || $pwd !== '1234') {
-    die;    
+$secret = 'Sh no se lo cuentes a nadie';
+$newHash = sha1($uid,$timestamp,$secret);
+
+if ($newHash !== $hash) {
+    die;
 }
 
 // Aqui definimos los recursos disponibles
